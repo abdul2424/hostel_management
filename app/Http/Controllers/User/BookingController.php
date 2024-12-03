@@ -30,6 +30,7 @@ class BookingController extends Controller
 
     public function storeBooking(Request $request)
     {
+
         $userId = $request->user_id;
 
 
@@ -60,7 +61,7 @@ class BookingController extends Controller
         Booking::create([
             'user_id' => $userId,
             'room_id' => $request->room_id,
-            'bed_id' => $request->bed_id,
+            'bed_id' => isset($request->bed_id) ? $request->bed_id : null,
             'start_date' => $request->start_date,
             'status' => 'booked',
         ]);
@@ -163,13 +164,12 @@ class BookingController extends Controller
         $available_beds = Bed::where('room_id', $roomId)
             ->where(function ($query) {
                 $query->whereDoesntHave('bookings')
-                      ->orWhereHas('bookings', function ($query) {
-                          $query->where('status', 'unbooked');
-                      });
+                    ->orWhereHas('bookings', function ($query) {
+                        $query->where('status', 'unbooked');
+                    });
             })
             ->get();
-    
+
         return response()->json($available_beds);
     }
-    
 }

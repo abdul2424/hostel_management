@@ -1,4 +1,5 @@
 @extends('user.dashboard.app')
+
 @section('content')
     <div class="row">
         <div class="col-xxl-6">
@@ -36,7 +37,7 @@
                                 <div class="col-md-12" id="bed_selection" style="display: none;">
                                     <div class="mb-3">
                                         <label for="bed_id" class="form-label">Bed Number</label>
-                                        <select class="form-control" name="bed_id" id="bed_id" required>
+                                        <select class="form-control" name="bed_id" id="bed_id">
                                             <option value="" disabled selected>Select a Bed</option>
                                             {{-- Beds will be dynamically loaded via JavaScript --}}
                                         </select>
@@ -66,7 +67,7 @@
 
 @section('script')
     <script>
-        document.getElementById('room_id').addEventListener('change', function() {
+        document.getElementById('room_id').addEventListener('change', function () {
             const roomId = this.value;
 
             if (roomId) {
@@ -82,8 +83,10 @@
                             });
 
                             document.getElementById('bed_selection').style.display = 'block';
+                            bedSelect.required = true; // Make bed selection required if beds are available
                         } else {
                             document.getElementById('bed_selection').style.display = 'none';
+                            bedSelect.required = false; // Make bed selection optional if no beds are available
                         }
                     })
                     .catch(error => console.error('Error fetching available beds:', error));
